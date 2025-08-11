@@ -1,0 +1,137 @@
+# Build directories
+build/
+bin/
+out/
+debug/
+release/
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cmake
+!CMakeLists.txt
+
+# Visual Studio files
+.vs/
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.sln
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Object files
+*.o
+*.obj
+*.lo
+*.so
+*.dll
+*.dylib
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Debug files
+*.pdb
+*.ilk
+*.exp
+
+# Temporary files
+*.tmp
+*.temp
+*~
+*.swp
+*.swo
+*#
+
+# IDE files
+.vscode/
+*.sublime-*
+.idea/
+*.code-workspace
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# Python cache (for mock interpreter)
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+
+# Package files
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Logs
+*.log
+logs/
+
+# Test files (optional - uncomment if you don't want to track test files)
+# test_*
+# *_test.*
+
+# Configuration files that might contain sensitive data
+config.ini
+settings.ini
+*.config
+
+# Editor backup files
+*.bak
+*.backup
+
+# Compiled static libraries
+*.lai
+*.la
+
+# Shared objects
+*.so.*
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Dynamic libraries
+*.dylib
+
+# Executables
+*.i*86
+*.x86_64
+*.hex
+
+# Coverage results
+*.gcov
+*.gcda
+*.gcno
+
+# Dependency directories
+node_modules/
+third_party/*/build/
+third_party/*/out/
+
+# Local environment variables
+.env
+.env.local
+.env.*.local
