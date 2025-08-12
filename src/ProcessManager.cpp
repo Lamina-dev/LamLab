@@ -8,8 +8,8 @@ wxBEGIN_EVENT_TABLE(ProcessManager, wxEvtHandler)
 wxEND_EVENT_TABLE()
 
 ProcessManager::ProcessManager()
-    : m_pid(0)
-    , m_timer(this)
+    : m_timer(this)
+    , m_pid(0)
 {
 }
 

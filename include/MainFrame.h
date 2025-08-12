@@ -32,7 +32,7 @@ private:
     void OnRun(wxCommandEvent& event);
     void OnStop(wxCommandEvent& event);
     void OnSettings(wxCommandEvent& event);
-    
+
     void OnAbout(wxCommandEvent& event);
     
     void OnClose(wxCloseEvent& event);

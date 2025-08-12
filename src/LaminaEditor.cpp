@@ -13,9 +13,7 @@ LaminaEditor::LaminaEditor(wxWindow* parent, wxWindowID id)
     SetupLaminaSyntax();
 }
 
-LaminaEditor::~LaminaEditor()
-{
-}
+LaminaEditor::~LaminaEditor() = default;
 
 bool LaminaEditor::LoadFile(const wxString& filename)
 {
@@ -40,9 +38,8 @@ bool LaminaEditor::SaveFile(const wxString& filename)
     wxFile file(filename, wxFile::write);
     if (!file.IsOpened())
         return false;
-    
-    wxString content = GetText();
-    if (!file.Write(content))
+
+    if (wxString content = GetText(); !file.Write(content))
         return false;
     
     m_currentFile = filename;

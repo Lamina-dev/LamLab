@@ -32,8 +32,8 @@ MainFrame::MainFrame()
     : wxFrame(nullptr, wxID_ANY, "LaminaLab IDE v0.0.1-Alpha", wxDefaultPosition, wxSize(800, 600))
     , m_editor(nullptr)
     , m_console(nullptr)
-    , m_processManager(nullptr)
     , m_isModified(false)
+    , m_processManager(nullptr)
 {
     // SetIcon(wxIcon(wxArtProvider::GetBitmap(wxART_EXECUTABLE_FILE, wxART_OTHER, wxSize(32, 32))));
     
@@ -56,10 +56,10 @@ MainFrame::~MainFrame()
 
 void MainFrame::CreateMenuBar()
 {
-    wxMenuBar* menuBar = new wxMenuBar();
+    auto* menuBar = new wxMenuBar();
     
     // 文件菜单
-    wxMenu* fileMenu = new wxMenu();
+    auto* fileMenu = new wxMenu();
     fileMenu->Append(wxID_NEW, "&New\tCtrl+N", "Create a new file");
     fileMenu->Append(wxID_OPEN, "&Open...\tCtrl+O", "Open an existing file");
     fileMenu->AppendSeparator();
@@ -69,7 +69,7 @@ void MainFrame::CreateMenuBar()
     fileMenu->Append(wxID_EXIT, "E&xit\tAlt+F4", "Exit the application");
     
     // 编辑菜单
-    wxMenu* editMenu = new wxMenu();
+    auto* editMenu = new wxMenu();
     editMenu->Append(wxID_UNDO, "&Undo\tCtrl+Z", "Undo the last action");
     editMenu->Append(wxID_REDO, "&Redo\tCtrl+Y", "Redo the last action");
     editMenu->AppendSeparator();
@@ -80,14 +80,14 @@ void MainFrame::CreateMenuBar()
     editMenu->Append(wxID_FIND, "&Find...\tCtrl+F", "Find text");
     
     // 运行菜单
-    wxMenu* runMenu = new wxMenu();
+    auto* runMenu = new wxMenu();
     runMenu->Append(ID_RUN, "&Run Script\tF5", "Run the current script");
     runMenu->Append(ID_STOP, "&Stop Script\tShift+F5", "Stop the running script");
     runMenu->AppendSeparator();
     runMenu->Append(ID_SETTINGS, "&Interpreter Path...", "Configure interpreter settings");
     
     // 帮助菜单
-    wxMenu* helpMenu = new wxMenu();
+    auto* helpMenu = new wxMenu();
     helpMenu->Append(wxID_ABOUT, "&About", "About this application");
     
     menuBar->Append(fileMenu, "&File");
@@ -232,8 +232,7 @@ void MainFrame::OnOpen(wxCommandEvent& event)
     
     if (dialog.ShowModal() == wxID_OK)
     {
-        wxString filename = dialog.GetPath();
-        if (m_editor->LoadFile(filename))
+        if (wxString filename = dialog.GetPath(); m_editor->LoadFile(filename))
         {
             m_currentFile = filename;
             m_isModified = false;
@@ -275,8 +274,7 @@ void MainFrame::OnSaveAs(wxCommandEvent& event)
     
     if (dialog.ShowModal() == wxID_OK)
     {
-        wxString filename = dialog.GetPath();
-        if (m_editor->SaveFile(filename))
+        if (wxString filename = dialog.GetPath(); m_editor->SaveFile(filename))
         {
             m_currentFile = filename;
             m_isModified = false;
@@ -329,11 +327,9 @@ void MainFrame::OnFind(wxCommandEvent& event)
 {
     if (m_editor)
     {
-        wxString findText = wxGetTextFromUser("Find:", "Find Text", "", this);
-        if (!findText.IsEmpty())
+        if (wxString findText = wxGetTextFromUser("Find:", "Find Text", "", this); !findText.IsEmpty())
         {
-            int pos = m_editor->FindText(m_editor->GetCurrentPos(), m_editor->GetTextLength(), findText, 0);
-            if (pos != -1)
+            if (int pos = m_editor->FindText(m_editor->GetCurrentPos(), m_editor->GetTextLength(), findText, 0); pos != -1)
             {
                 m_editor->SetSelection(pos, pos + findText.Length());
                 m_editor->EnsureCaretVisible();
@@ -416,22 +412,22 @@ void MainFrame::OnSettings(wxCommandEvent& event)
 {
     wxDialog dialog(this, wxID_ANY, "Interpreter Configuration", wxDefaultPosition, wxSize(400, 200));
     
-    wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
+    auto* mainSizer = new wxBoxSizer(wxVERTICAL);
     
     // 说明文本
-    wxStaticText* label = new wxStaticText(&dialog, wxID_ANY, 
+    auto* label = new wxStaticText(&dialog, wxID_ANY,
         "Configure the path to the LaminaLab interpreter.\nUse %lmfilepath% as placeholder for the current file path.");
     mainSizer->Add(label, 0, wxALL | wxEXPAND, 10);
     
     // 路径输入
-    wxTextCtrl* pathCtrl = new wxTextCtrl(&dialog, wxID_ANY, m_interpreterPath, 
+    auto* pathCtrl = new wxTextCtrl(&dialog, wxID_ANY, m_interpreterPath,
                                          wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
     mainSizer->Add(pathCtrl, 0, wxLEFT | wxRIGHT | wxBOTTOM | wxEXPAND, 10);
     
     // 按钮
-    wxBoxSizer* buttonSizer = new wxBoxSizer(wxHORIZONTAL);
-    wxButton* okBtn = new wxButton(&dialog, wxID_OK, "OK");
-    wxButton* cancelBtn = new wxButton(&dialog, wxID_CANCEL, "Cancel");
+    auto* buttonSizer = new wxBoxSizer(wxHORIZONTAL);
+    auto* okBtn = new wxButton(&dialog, wxID_OK, "OK");
+    auto* cancelBtn = new wxButton(&dialog, wxID_CANCEL, "Cancel");
     buttonSizer->Add(okBtn, 0, wxRIGHT, 5);
     buttonSizer->Add(cancelBtn, 0, 0, 0);
     mainSizer->Add(buttonSizer, 0, wxALL | wxALIGN_RIGHT, 10);
