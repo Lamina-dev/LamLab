@@ -1,0 +1,117 @@
+// Advanced Lamina Script Example
+// 展示 IDE 的语法高亮和功能
+
+/* 
+ * 多行注释示例
+ * 这是一个复杂的 Lamina 脚本
+ */
+
+// 常量定义
+const VERSION = "1.0.0";
+const PI = 3.14159265359;
+
+// 类定义示例
+class Calculator {
+    constructor(name) {
+        this.name = name;
+        this.history = [];
+    }
+    
+    add(a, b) {
+        let result = a + b;
+        this.history.push(`${a} + ${b} = ${result}`);
+        return result;
+    }
+    
+    multiply(a, b) {
+        let result = a * b;
+        this.history.push(`${a} * ${b} = ${result}`);
+        return result;
+    }
+    
+    getHistory() {
+        return this.history;
+    }
+}
+
+// 异步函数示例
+async function fetchData(url) {
+    try {
+        let response = await fetch(url);
+        let data = await response.json();
+        return data;
+    } catch (error) {
+        print("Error fetching data:", error);
+        return null;
+    }
+}
+
+// 主函数
+function main() {
+    print("=== Lamina IDE 功能演示 ===");
+    print("版本:", VERSION);
+    
+    // 变量声明和操作
+    let numbers = [1, 2, 3, 4, 5];
+    let total = 0;
+    
+    // 数组遍历
+    for (let num of numbers) {
+        total += num;
+        print(`Adding ${num}, total: ${total}`);
+    }
+    
+    // 对象操作
+    let calc = new Calculator("MainCalculator");
+    let sum = calc.add(10, 20);
+    let product = calc.multiply(sum, 2);
+    
+    print("计算结果:", product);
+    
+    // 条件判断
+    if (product > 50) {
+        print("结果大于 50");
+    } elif (product === 50) {
+        print("结果等于 50");
+    } else {
+        print("结果小于 50");
+    }
+    
+    // 函数调用和字符串操作
+    let message = formatMessage("Hello", "Lamina", "World");
+    print(message);
+    
+    // 错误处理
+    try {
+        riskyOperation();
+    } catch (e) {
+        print("捕获到错误:", e.message);
+    } finally {
+        print("清理资源");
+    }
+    
+    // 计算历史
+    print("\n=== 计算历史 ===");
+    let history = calc.getHistory();
+    for (let i = 0; i < history.length; i++) {
+        print(`${i + 1}. ${history[i]}`);
+    }
+    
+    return 0;
+}
+
+// 辅助函数
+function formatMessage(...args) {
+    return args.join(" ") + "!";
+}
+
+function riskyOperation() {
+    throw new Error("这是一个测试错误");
+}
+
+// 程序启动
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { main, Calculator };
+} else {
+    main();
+}
