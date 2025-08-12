@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #include "LaminaIDE.h"
 
 int main(int argc, char *argv[]) {
@@ -28,3 +29,8 @@ int main(int argc, char *argv[]) {
 }
 
 #include "main.moc"
+=======
+#include "LaminaApp.h"
+
+wxIMPLEMENT_APP(LaminaApp);
+>>>>>>> a84a2c4 (更新CMakeLists.txt，README.md和14多个文件... 重制，使用WxWidgets)

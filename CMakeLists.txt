@@ -14,6 +14,7 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug)
 endif()
 
+<<<<<<< HEAD
 # 设置 vcpkg 工具链文件
 if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     set(CMAKE_TOOLCHAIN_FILE "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
@@ -23,10 +24,20 @@ endif()
 # 查找 wxWidgets
 find_package(wxWidgets REQUIRED COMPONENTS core base stc aui)
 include(${wxWidgets_USE_FILE})
+=======
+# 设置 vcpkg 工具链
+if(DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+    set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CACHE STRING "")
+endif()
+
+# 查找 wxWidgets
+find_package(wxWidgets CONFIG REQUIRED)
+>>>>>>> a84a2c4 (更新CMakeLists.txt，README.md和14多个文件... 重制，使用WxWidgets)
 
 # IDE 源文件
 set(IDE_SOURCES
     src/main.cpp
+<<<<<<< HEAD
     src/LaminaIDE.cpp
     src/LaminaIDE.h
     src/CodeCell.cpp
@@ -35,13 +46,20 @@ set(IDE_SOURCES
     src/TextCell.h
     src/LaminaHighlighter.cpp
     src/LaminaHighlighter.h
+=======
+    src/MainFrame.cpp
+    src/LaminaApp.cpp
+    src/LaminaEditor.cpp
+    src/ProcessManager.cpp
+>>>>>>> a84a2c4 (更新CMakeLists.txt，README.md和14多个文件... 重制，使用WxWidgets)
 )
 
 # 创建主执行文件
-add_executable(LaminaIDE ${IDE_SOURCES})
+add_executable(LaminaIDE WIN32 ${IDE_SOURCES})
 
 # 设置包含目录
 target_include_directories(LaminaIDE PRIVATE
+<<<<<<< HEAD
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/third_party
 )
@@ -62,6 +80,26 @@ if(WIN32)
     set_target_properties(LaminaIDE PROPERTIES
         WIN32_EXECUTABLE FALSE
     )
+=======
+    include
+)
+
+# 链接库
+target_link_libraries(LaminaIDE PRIVATE
+    wx::core
+    wx::base
+    wx::stc
+    wx::aui
+)
+
+# 设置编译器标志
+if(MSVC)
+    target_compile_options(LaminaIDE PRIVATE /W3)
+    # 添加 Unicode 支持
+    target_compile_definitions(LaminaIDE PRIVATE UNICODE _UNICODE)
+else()
+    target_compile_options(LaminaIDE PRIVATE -Wall -Wextra)
+>>>>>>> a84a2c4 (更新CMakeLists.txt，README.md和14多个文件... 重制，使用WxWidgets)
 endif()
 
 # 设置输出目录
@@ -70,8 +108,11 @@ set_target_properties(LaminaIDE PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_BINARY_DIR}/bin/Debug"
     RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}/bin/Release"
 )
+<<<<<<< HEAD
 
 # 安装规则
 install(TARGETS LaminaIDE
     RUNTIME DESTINATION bin
 )
+=======
+>>>>>>> a84a2c4 (更新CMakeLists.txt，README.md和14多个文件... 重制，使用WxWidgets)
