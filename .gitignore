@@ -135,3 +135,5 @@ third_party/*/out/
 .env
 .env.local
 .env.*.local
+
+qt_path.txt
