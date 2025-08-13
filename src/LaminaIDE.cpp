@@ -57,7 +57,7 @@ void LaminaIDE::runCode(const QString &code) {
 
     // 检查解释器路径是否设置
     if (interpreterPath.isEmpty()) {
-        QMessageBox::warning(this, tr("错误"), tr("请先设置Lamina解释器路径"));
+        QMessageBox::warning(this, tr("错误"), tr("请先在“文件”选项卡中设置Lamina解释器的路径"));
         return;
     }
 
@@ -108,7 +108,7 @@ void LaminaIDE::showAbout() {
                        tr("<h2>Lamina IDE 1.0</h2>"
                           "<p>基于Qt 6.9开发的Lamina语言集成开发环境</p>"
                           "<p>提供类似Jupyter Notebook的交互式编程体验</p>"
-                          "<p>&copy; 2025 Lamina开发团队</p>"));
+                          "<p>&copy; 2025 Lamina开发团队（https://github.com/Lamina-dev）</p>"));
 }
 
 void LaminaIDE::updateWindowTitle() {
