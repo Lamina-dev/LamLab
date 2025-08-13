@@ -37,6 +37,14 @@ target_link_libraries(LamLab
         Qt::Widgets
 )
 
+if (WIN32)
+    if (MSVC)
+        target_link_options(LamLab PRIVATE "/SUBSYSTEM:WINDOWS")
+    elseif (MINGW)
+        target_link_options(LamLab PRIVATE "-Wl,-subsystem,windows")
+    endif()
+endif()
+
 if (WIN32 AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     set(DEBUG_SUFFIX)
     if (MSVC AND CMAKE_BUILD_TYPE MATCHES "Debug")
