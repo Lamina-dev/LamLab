@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 4.0)
+cmake_minimum_required(VERSION 3.15)
 project(LamLab)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -6,7 +6,6 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-<<<<<<< HEAD
 if(EXISTS "${CMAKE_SOURCE_DIR}/qt_path.txt")
     file(READ "${CMAKE_SOURCE_DIR}/qt_path.txt" QT_PATH)
     string(STRIP "${QT_PATH}" QT_PATH)
@@ -74,7 +73,7 @@ if (WIN32 AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
                 "$<TARGET_FILE_DIR:${PROJECT_NAME}>")
     endforeach (QT_LIB)
 endif ()
-=======
+
 # 设置构建类型
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug)
@@ -159,4 +158,3 @@ set_target_properties(LaminaIDE PROPERTIES
 
 # 复制资源文件
 file(COPY assets DESTINATION ${CMAKE_BINARY_DIR}/bin)
->>>>>>> parent of a84a2c4... 更新CMakeLists.txt，README.md和14多个文件... 重制，使用WxWidgets
