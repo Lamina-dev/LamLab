@@ -25,6 +25,9 @@ public:
     // 设置变化回调
     void SetChangeCallback(std::function<void()> callback) { m_changeCallback = callback; }
     
+    // 主题配置
+    void ApplyTheme(const wxString& themeName = wxEmptyString);
+    
 private:
     // 事件处理
     void OnTextChanged(wxStyledTextEvent& event);

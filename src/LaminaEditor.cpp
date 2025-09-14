@@ -1,4 +1,5 @@
 #include "LaminaEditor.h"
+#include "ThemeConfig.h"
 #include <wx/file.h>
 
 wxBEGIN_EVENT_TABLE(LaminaEditor, wxStyledTextCtrl)
@@ -9,8 +10,17 @@ wxEND_EVENT_TABLE()
 LaminaEditor::LaminaEditor(wxWindow* parent, wxWindowID id)
     : wxStyledTextCtrl(parent, id)
 {
+    // 基本编辑器设置
+    SetTechnology(wxSTC_TECHNOLOGY_DEFAULT); // 使用默认渲染技术
+    SetBufferedDraw(true); // 启用缓冲绘制
+    SetCodePage(wxSTC_CP_UTF8); // 使用 UTF-8 编码
+    
+    // 设置主题和语法
     SetupEditorPreferences();
     SetupLaminaSyntax();
+    
+    // 刷新显示
+    Refresh();
 }
 
 LaminaEditor::~LaminaEditor()
@@ -87,34 +97,43 @@ void LaminaEditor::SetupEditorPreferences()
 
 void LaminaEditor::SetupLaminaSyntax()
 {
-    // 使用 C++ lexer 作为基础，因为 Lamina 语法类似
+    // 使用 C++ lexer 作为基础
     SetLexer(wxSTC_LEX_CPP);
     
+    // 设置分隔符
+    SetWordChars("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_πe√");
+    
+    // 设置词法分析器属性
+    SetProperty("lexer.cpp.allow.dollars", "0");
+    SetProperty("lexer.cpp.hashquoted.strings", "0");
+    SetProperty("lexer.cpp.track.preprocessor", "0");
+    
     SetLexerKeywords();
+    ApplyTheme();
+}
+
+void LaminaEditor::ApplyTheme(const wxString& themeName)
+{
+    if (!themeName.IsEmpty())
+    {
+        ThemeConfig::Get().LoadTheme(themeName);
+    }
     SetLexerColors();
+    SetEditorStyles();
 }
 
 void LaminaEditor::SetLexerKeywords()
 {
-    // Lamina 关键字 - 根据实际 Lamina 语言定义调整
-    wxString keywords0 = "if else elif while for in break continue function return "
-                        "true false null undefined let const var class struct "
-                        "import export from as try catch finally throw "
-                        "async await yield new delete this super extends "
-                        "public private protected static abstract interface "
-                        "enum type union namespace module package";
+    // Lamina 关键字
+    wxString keywords0 = "if else while for return break continue "
+                        "var func print input assert include "
+                        "true false null";
     
-    // 内置类型
-    wxString keywords1 = "int float double bool string char void "
-                        "number object array map set list tuple "
-                        "any unknown never";
+    // 数据类型
+    wxString keywords1 = "int float rational irrational bool string";
     
-    // 内置函数
-    wxString keywords2 = "print println log error warn info debug "
-                        "length size push pop shift unshift "
-                        "indexOf contains startsWith endsWith "
-                        "substr substring split join trim "
-                        "toString toNumber toBoolean";
+    // 内置常量和函数
+    wxString keywords2 = "π e dot cross";
     
     SetKeyWords(0, keywords0);
     SetKeyWords(1, keywords1);
@@ -123,59 +142,76 @@ void LaminaEditor::SetLexerKeywords()
 
 void LaminaEditor::SetLexerColors()
 {
-    // 默认文本
-    StyleSetForeground(wxSTC_C_DEFAULT, wxColour(0, 0, 0));
-    StyleSetBackground(wxSTC_C_DEFAULT, wxColour(255, 255, 255));
+    ThemeConfig& theme = ThemeConfig::Get();
+    // 应用默认样式
+    StyleClearAll();
+    // 首先设置默认风格
+    StyleSetBackground(wxSTC_STYLE_DEFAULT, theme.GetColor("default", "background"));
+    StyleSetForeground(wxSTC_STYLE_DEFAULT, theme.GetColor("default"));
+    SetWhitespaceBackground(true, theme.GetColor("default", "background"));
+    SetWhitespaceForeground(true, theme.GetColor("default"));
+    
+    // 设置选择区域的颜色
+    SetSelBackground(true, wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHT));
+    SetSelForeground(true, wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHTTEXT));
     
     // 注释
-    StyleSetForeground(wxSTC_C_COMMENT, wxColour(0, 128, 0));
-    StyleSetForeground(wxSTC_C_COMMENTLINE, wxColour(0, 128, 0));
-    StyleSetForeground(wxSTC_C_COMMENTDOC, wxColour(128, 128, 128));
+    StyleSetForeground(wxSTC_C_COMMENT, theme.GetColor("comments"));
+    StyleSetForeground(wxSTC_C_COMMENTLINE, theme.GetColor("comments"));
+    StyleSetItalic(wxSTC_C_COMMENT, theme.IsItalic("comments"));
+    StyleSetItalic(wxSTC_C_COMMENTLINE, theme.IsItalic("comments"));
     
-    // 关键字
-    StyleSetForeground(wxSTC_C_WORD, wxColour(0, 0, 255));
-    StyleSetBold(wxSTC_C_WORD, true);
+    // 控制关键字
+    StyleSetForeground(wxSTC_C_WORD, theme.GetColor("keywords"));
+    StyleSetBold(wxSTC_C_WORD, theme.IsBold("keywords", "control"));
     
-    // 类型关键字
-    StyleSetForeground(wxSTC_C_WORD2, wxColour(43, 145, 175));
-    StyleSetBold(wxSTC_C_WORD2, true);
+    // 数据类型
+    StyleSetForeground(wxSTC_C_WORD2, theme.GetColor("keywords", "types"));
+    StyleSetBold(wxSTC_C_WORD2, theme.IsBold("keywords", "types"));
     
     // 字符串
-    StyleSetForeground(wxSTC_C_STRING, wxColour(163, 21, 21));
-    StyleSetForeground(wxSTC_C_CHARACTER, wxColour(163, 21, 21));
-    StyleSetForeground(wxSTC_C_STRINGEOL, wxColour(163, 21, 21));
+    StyleSetForeground(wxSTC_C_STRING, theme.GetColor("strings"));
     
     // 数字
-    StyleSetForeground(wxSTC_C_NUMBER, wxColour(255, 127, 0));
+    StyleSetForeground(wxSTC_C_NUMBER, theme.GetColor("numbers"));
     
-    // 操作符
-    StyleSetForeground(wxSTC_C_OPERATOR, wxColour(0, 0, 0));
-    StyleSetBold(wxSTC_C_OPERATOR, true);
+    // 运算符
+    StyleSetForeground(wxSTC_C_OPERATOR, theme.GetColor("operators"));
+    StyleSetBold(wxSTC_C_OPERATOR, theme.IsBold("operators"));
+    
+    // 特殊常量
+    StyleSetForeground(wxSTC_C_GLOBALCLASS, theme.GetColor("constants"));
+    StyleSetBold(wxSTC_C_GLOBALCLASS, theme.IsBold("constants"));
+    
+    // 函数名
+    StyleSetForeground(wxSTC_C_IDENTIFIER, theme.GetColor("functions"));
     
     // 标识符
-    StyleSetForeground(wxSTC_C_IDENTIFIER, wxColour(0, 0, 0));
-    
-    // 预处理器
-    StyleSetForeground(wxSTC_C_PREPROCESSOR, wxColour(128, 128, 128));
+    StyleSetForeground(wxSTC_C_IDENTIFIER, theme.GetColor("identifiers"));
 }
 
 void LaminaEditor::SetEditorStyles()
 {
+    ThemeConfig& theme = ThemeConfig::Get();
+    
     // 行号样式
-    StyleSetForeground(wxSTC_STYLE_LINENUMBER, wxColour(75, 75, 75));
-    StyleSetBackground(wxSTC_STYLE_LINENUMBER, wxColour(245, 245, 245));
+    StyleSetForeground(wxSTC_STYLE_LINENUMBER, theme.GetColor("linenumber"));
+    StyleSetBackground(wxSTC_STYLE_LINENUMBER, theme.GetColor("linenumber", "background"));
     
     // 折叠标记样式
-    StyleSetForeground(wxSTC_STYLE_INDENTGUIDE, wxColour(192, 192, 192));
+    StyleSetForeground(wxSTC_STYLE_INDENTGUIDE, theme.GetColor("linenumber"));
+    
+    // 当前行高亮
+    SetCaretLineBackground(theme.GetColor("currentLine", "background"));
     
     // 大括号匹配
-    StyleSetForeground(wxSTC_STYLE_BRACELIGHT, wxColour(0, 0, 255));
-    StyleSetBackground(wxSTC_STYLE_BRACELIGHT, wxColour(255, 255, 255));
-    StyleSetBold(wxSTC_STYLE_BRACELIGHT, true);
+    StyleSetForeground(wxSTC_STYLE_BRACELIGHT, theme.GetColor("braceMatch"));
+    StyleSetBackground(wxSTC_STYLE_BRACELIGHT, theme.GetColor("braceMatch", "background"));
+    StyleSetBold(wxSTC_STYLE_BRACELIGHT, theme.IsBold("braceMatch"));
     
-    StyleSetForeground(wxSTC_STYLE_BRACEBAD, wxColour(255, 0, 0));
-    StyleSetBackground(wxSTC_STYLE_BRACEBAD, wxColour(255, 255, 255));
-    StyleSetBold(wxSTC_STYLE_BRACEBAD, true);
+    StyleSetForeground(wxSTC_STYLE_BRACEBAD, theme.GetColor("braceMismatch"));
+    StyleSetBackground(wxSTC_STYLE_BRACEBAD, theme.GetColor("braceMismatch", "background"));
+    StyleSetBold(wxSTC_STYLE_BRACEBAD, theme.IsBold("braceMismatch"));
 }
 
 void LaminaEditor::SetMargins()

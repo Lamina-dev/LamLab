@@ -20,15 +20,18 @@ if(DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
 endif()
 
 # 查找 wxWidgets
-find_package(wxWidgets CONFIG REQUIRED)
+set(wxWidgets_USE_STATIC ON)
+set(wxWidgets_USE_UNICODE ON)
+find_package(wxWidgets REQUIRED COMPONENTS base core aui stc xml)
 
-# IDE 源文件
+# 添加源文件
 set(IDE_SOURCES
     src/main.cpp
     src/MainFrame.cpp
     src/LaminaApp.cpp
     src/LaminaEditor.cpp
     src/ProcessManager.cpp
+    src/ThemeConfig.cpp
 )
 
 # 创建主执行文件
@@ -40,12 +43,12 @@ target_include_directories(LaminaIDE PRIVATE
 )
 
 # 链接库
-target_link_libraries(LaminaIDE PRIVATE
-    wx::core
-    wx::base
-    wx::stc
-    wx::aui
-)
+if(wxWidgets_FOUND)
+    include(${wxWidgets_USE_FILE})
+    target_link_libraries(LaminaIDE PRIVATE ${wxWidgets_LIBRARIES})
+else()
+    message(FATAL_ERROR "wxWidgets not found")
+endif()
 
 # 设置编译器标志
 if(MSVC)
@@ -61,4 +64,14 @@ set_target_properties(LaminaIDE PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
     RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_BINARY_DIR}/bin/Debug"
     RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}/bin/Release"
+)
+
+# 复制配置文件
+add_custom_command(TARGET LaminaIDE POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/bin/Debug/config"
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/bin/Release/config"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CMAKE_SOURCE_DIR}/config/themes.xml"
+        "${CMAKE_BINARY_DIR}/bin/$<CONFIG>/config/themes.xml"
+    COMMENT "Copying configuration files to output directory"
 )

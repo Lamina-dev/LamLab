@@ -1,6 +1,7 @@
 #include "MainFrame.h"
 #include "LaminaEditor.h"
 #include "ProcessManager.h"
+#include "ThemeConfig.h"
 #include <wx/filename.h>
 #include <wx/filedlg.h>
 #include <wx/msgdlg.h>
@@ -22,6 +23,7 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_MENU(ID_RUN, MainFrame::OnRun)
     EVT_MENU(ID_STOP, MainFrame::OnStop)
     EVT_MENU(ID_SETTINGS, MainFrame::OnSettings)
+    EVT_MENU(ID_THEME_START, MainFrame::OnTheme)
     EVT_MENU(wxID_ABOUT, MainFrame::OnAbout)
     EVT_CLOSE(MainFrame::OnClose)
     EVT_STC_CHANGE(ID_EDITOR, MainFrame::OnTextChange)
@@ -36,6 +38,9 @@ MainFrame::MainFrame()
     , m_isModified(false)
 {
     // SetIcon(wxIcon(wxArtProvider::GetBitmap(wxART_EXECUTABLE_FILE, wxART_OTHER, wxSize(32, 32))));
+    
+    // 确保主题配置已加载
+    ThemeConfig::Get();
     
     CreateMenuBar();
     CreateStatusBar();
@@ -52,6 +57,26 @@ MainFrame::MainFrame()
 MainFrame::~MainFrame()
 {
     m_auiManager.UnInit();
+}
+
+// 添加主题菜单
+void MainFrame::CreateThemeMenu(wxMenu* viewMenu)
+{
+    ThemeConfig& config = ThemeConfig::Get();
+    const wxArrayString& themes = config.GetAvailableThemes();
+    
+    wxMenu* themeMenu = new wxMenu;
+    for (size_t i = 0; i < themes.GetCount(); ++i)
+    {
+        themeMenu->AppendRadioItem(ID_THEME_START + i, themes[i]);
+        if (themes[i] == config.GetCurrentTheme())
+        {
+            themeMenu->Check(ID_THEME_START + i, true);
+        }
+    }
+    
+    viewMenu->AppendSeparator();
+    viewMenu->AppendSubMenu(themeMenu, _("主题(&T)"));
 }
 
 void MainFrame::CreateMenuBar()
@@ -442,6 +467,21 @@ void MainFrame::OnSettings(wxCommandEvent& event)
     {
         m_interpreterPath = pathCtrl->GetValue();
         SaveSettings();
+    }
+}
+
+void MainFrame::OnTheme(wxCommandEvent& event)
+{
+    if (m_editor)
+    {
+        int menuId = event.GetId();
+        int themeIndex = menuId - ID_THEME_START;
+        
+        if (themeIndex >= 0 && themeIndex < ThemeConfig::Get().GetAvailableThemes().GetCount())
+        {
+            wxString themeName = ThemeConfig::Get().GetAvailableThemes()[themeIndex];
+            m_editor->ApplyTheme(themeName);
+        }
     }
 }
 

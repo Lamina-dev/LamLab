@@ -8,6 +8,18 @@
 class LaminaEditor;
 class ProcessManager;
 
+// Menu IDs
+enum {
+    ID_SAVE_AS = wxID_HIGHEST + 1,
+    ID_RUN,
+    ID_STOP,
+    ID_SETTINGS,
+    ID_EDITOR,
+    ID_CONSOLE,
+    ID_THEME_START,
+    ID_THEME_END = ID_THEME_START + 100 // 支持最多100个主题
+};
+
 class MainFrame : public wxFrame
 {
 public:
@@ -32,6 +44,7 @@ private:
     void OnRun(wxCommandEvent& event);
     void OnStop(wxCommandEvent& event);
     void OnSettings(wxCommandEvent& event);
+    void OnTheme(wxCommandEvent& event);
     
     void OnAbout(wxCommandEvent& event);
     
@@ -44,6 +57,8 @@ private:
     void InitializeAUI();
     void CreateEditor();
     void CreateConsole();
+    
+    void CreateThemeMenu(wxMenu* viewMenu);
     
     // 文本编辑器事件
     void OnTextChange(wxStyledTextEvent& event);

@@ -1,0 +1,224 @@
+{
+    "name": "Lamina",
+    "scopeName": "source.lamina",
+    "fileTypes": ["lm"],
+    "patterns": [
+        {
+            "include": "#comments"
+        },
+        {
+            "include": "#strings"
+        },
+        {
+            "include": "#keywords"
+        },
+        {
+            "include": "#constants"
+        },
+        {
+            "include": "#numbers"
+        },
+        {
+            "include": "#functions"
+        },
+        {
+            "include": "#arrays"
+        },
+        {
+            "include": "#controlStructures"
+        },
+        {
+            "include": "#moduleImports"
+        },
+        {
+            "include": "#punctuation"
+        },
+        {
+            "include": "#operators"
+        }
+    ],
+    "repository": {
+        "comments": {
+            "patterns": [
+                {
+                    "name": "comment.line.double-slash.lamina",
+                    "match": "//.*$"
+                },
+                {
+                    "name": "comment.block.lamina",
+                    "begin": "/\\*",
+                    "end": "\\*/"
+                }
+            ]
+        },
+        "strings": {
+            "name": "string.quoted.double.lamina",
+            "begin": "\"",
+            "end": "\"",
+            "patterns": [
+                {
+                    "name": "constant.character.escape.lamina",
+                    "match": "\\\\."
+                }
+            ]
+        },
+        "keywords": {
+            "patterns": [
+                {
+                    "name": "keyword.control.lamina",
+                    "match": "\\b(if|else|while|for|return|break|continue)\\b"
+                },
+                {
+                    "name": "keyword.other.lamina",
+                    "match": "\\b(var|func|print|input|assert|include)\\b"
+                },
+                {
+                    "name": "storage.type.lamina",
+                    "match": "\\b(int|float|rational|irrational|bool|string)\\b"
+                }
+            ]
+        },
+        "constants": {
+            "patterns": [
+                {
+                    "name": "constant.language.boolean.lamina",
+                    "match": "\\b(true|false)\\b"
+                },
+                {
+                    "name": "constant.language.null.lamina",
+                    "match": "\\bnull\\b"
+                },
+                {
+                    "name": "constant.language.irrational.lamina",
+                    "match": "\\b(π|e)\\b"
+                }
+            ]
+        },
+        "numbers": {
+            "patterns": [
+                {
+                    "name": "constant.numeric.integer.lamina",
+                    "match": "\\b\\d+\\b"
+                },
+                {
+                    "name": "constant.numeric.float.lamina",
+                    "match": "\\b\\d*\\.\\d+\\b"
+                },
+                {
+                    "name": "constant.numeric.rational.lamina",
+                    "match": "\\b\\d+/\\d+\\b"
+                },
+                {
+                    "name": "constant.numeric.irrational.lamina",
+                    "match": "√\\d+"
+                }
+            ]
+        },
+        "functions": {
+            "patterns": [
+                {
+                    "name": "entity.name.function.lamina",
+                    "match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\s*(?=\\()"
+                },
+                {
+                    "name": "entity.name.function.declaration.lamina",
+                    "match": "\\b(func)\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\s*(?=\\()"
+                }
+            ]
+        },
+        "arrays": {
+            "patterns": [
+                {
+                    "name": "punctuation.definition.array.begin.lamina",
+                    "match": "\\["
+                },
+                {
+                    "name": "punctuation.definition.array.end.lamina",
+                    "match": "\\]"
+                }
+            ]
+        },
+        "controlStructures": {
+            "patterns": [
+                {
+                    "name": "keyword.control.conditional.lamina",
+                    "match": "\\b(if|else)\\b"
+                },
+                {
+                    "name": "keyword.control.loop.lamina",
+                    "match": "\\b(while|for)\\b"
+                },
+                {
+                    "name": "keyword.control.flow.lamina",
+                    "match": "\\b(break|continue|return)\\b"
+                },
+                {
+                    "begin": "\\b(if|while|for)\\s*\\(",
+                    "end": "\\)",
+                    "name": "meta.control.condition.lamina",
+                    "patterns": [
+                        {
+                            "include": "#expressions"
+                        }
+                    ]
+                }
+            ]
+        },
+        "moduleImports": {
+            "patterns": [
+                {
+                    "match": "(include)\\s+\"([^\"]+)\"",
+                    "name": "meta.import.lamina",
+                    "captures": {
+                        "1": {
+                            "name": "keyword.control.import.lamina"
+                        },
+                        "2": {
+                            "name": "string.quoted.double.module.lamina"
+                        }
+                    }
+                }
+            ]
+        },
+        "punctuation": {
+            "patterns": [
+                {
+                    "name": "punctuation.terminator.statement.lamina",
+                    "match": ";"
+                },
+                {
+                    "name": "punctuation.section.block.begin.lamina",
+                    "match": "\\{"
+                },
+                {
+                    "name": "punctuation.section.block.end.lamina",
+                    "match": "\\}"
+                },
+                {
+                    "name": "punctuation.separator.parameter.lamina",
+                    "match": ","
+                }
+            ]
+        },
+        "operators": {
+            "patterns": [
+                {
+                    "name": "keyword.operator.arithmetic.lamina",
+                    "match": "\\+|-|\\*|/|%|\\^|!"
+                },
+                {
+                    "name": "keyword.operator.comparison.lamina",
+                    "match": "==|!=|<|<=|>|>="
+                },
+                {
+                    "name": "keyword.operator.logical.lamina",
+                    "match": "&&|\\|\\|"
+                },
+                {
+                    "name": "keyword.operator.vector.lamina",
+                    "match": "\\b(dot|cross)\\b"
+                }
+            ]
+        }
+    }
+}

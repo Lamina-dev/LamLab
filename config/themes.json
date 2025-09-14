@@ -1,0 +1,131 @@
+{
+    "theme": "default",
+    "styles": {
+        "default": {
+            "default": {
+                "foreground": "#000000",
+                "background": "#FFFFFF"
+            },
+            "comments": {
+                "line": {
+                    "foreground": "#008000",
+                    "italic": true
+                },
+                "block": {
+                    "foreground": "#008000",
+                    "italic": true
+                }
+            },
+            "keywords": {
+                "control": {
+                    "foreground": "#0000FF",
+                    "bold": true
+                },
+                "types": {
+                    "foreground": "#2B91AF",
+                    "bold": true
+                }
+            },
+            "strings": {
+                "foreground": "#A31515"
+            },
+            "numbers": {
+                "foreground": "#FF7F00"
+            },
+            "operators": {
+                "foreground": "#666666",
+                "bold": true
+            },
+            "constants": {
+                "foreground": "#A349A4",
+                "bold": true
+            },
+            "functions": {
+                "foreground": "#3F7F7F"
+            },
+            "identifiers": {
+                "foreground": "#000000"
+            },
+            "linenumber": {
+                "foreground": "#4B4B4B",
+                "background": "#F5F5F5"
+            },
+            "currentLine": {
+                "background": "#F0F0F0"
+            },
+            "braceMatch": {
+                "foreground": "#0000FF",
+                "background": "#FFFFFF",
+                "bold": true
+            },
+            "braceMismatch": {
+                "foreground": "#FF0000",
+                "background": "#FFFFFF",
+                "bold": true
+            }
+        },
+        "dark": {
+            "default": {
+                "foreground": "#D4D4D4",
+                "background": "#1E1E1E"
+            },
+            "comments": {
+                "line": {
+                    "foreground": "#6A9955",
+                    "italic": true
+                },
+                "block": {
+                    "foreground": "#6A9955",
+                    "italic": true
+                }
+            },
+            "keywords": {
+                "control": {
+                    "foreground": "#C586C0",
+                    "bold": true
+                },
+                "types": {
+                    "foreground": "#4EC9B0",
+                    "bold": true
+                }
+            },
+            "strings": {
+                "foreground": "#CE9178"
+            },
+            "numbers": {
+                "foreground": "#B5CEA8"
+            },
+            "operators": {
+                "foreground": "#D4D4D4",
+                "bold": true
+            },
+            "constants": {
+                "foreground": "#4FC1FF",
+                "bold": true
+            },
+            "functions": {
+                "foreground": "#DCDCAA"
+            },
+            "identifiers": {
+                "foreground": "#D4D4D4"
+            },
+            "linenumber": {
+                "foreground": "#858585",
+                "background": "#1E1E1E"
+            },
+            "currentLine": {
+                "background": "#282828"
+            },
+            "braceMatch": {
+                "foreground": "#C586C0",
+                "background": "#1E1E1E",
+                "bold": true
+            },
+            "braceMismatch": {
+                "foreground": "#F44747",
+                "background": "#1E1E1E",
+                "bold": true
+            }
+        }
+    }
+}
