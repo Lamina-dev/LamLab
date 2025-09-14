@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-# LaminaLab
-最近更新: parent of a84a2c4... 更新CMakeLists.txt，README.md和14多个文件... 重制，使用WxWidgets
-=======
 # LaminaLab IDE v0.0.1-Alpha
 
 A lightweight IDE specifically designed for the Lamina programming language, built with wxWidgets and powered by Scintilla text editor.
@@ -224,4 +220,3 @@ For issues, suggestions, or contributions, please visit the project repository o
 ---
 
 **LaminaLab IDE v0.0.1-Alpha** - Built with ❤️ for the Lamina programming language community.
->>>>>>> a84a2c4 (更新CMakeLists.txt，README.md和14多个文件... 重制，使用WxWidgets)
