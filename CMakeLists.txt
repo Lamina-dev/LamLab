@@ -1,124 +1,40 @@
-cmake_minimum_required(VERSION 4.0)
-project(LamLab)
+cmake_minimum_required(VERSION 3.20)
+project(LaminaIDE 
+    VERSION 0.1.0
+    DESCRIPTION "Lamina Interactive Development Environment"
+    LANGUAGES CXX)
 
+# 设置 C++ 标准
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-<<<<<<< HEAD
-if(EXISTS "${CMAKE_SOURCE_DIR}/qt_path.txt")
-    file(READ "${CMAKE_SOURCE_DIR}/qt_path.txt" QT_PATH)
-    string(STRIP "${QT_PATH}" QT_PATH)
-    set(CMAKE_PREFIX_PATH "${QT_PATH}")
-    message(STATUS "Set CMAKE_PREFIX_PATH from qt_path.txt: ${CMAKE_PREFIX_PATH}")
-else()
-    message(WARNING "qt_path.txt not found in project root directory")
-endif()
-
-find_package(Qt6 COMPONENTS
-        Core
-        Gui
-        Widgets
-        REQUIRED)
-
-add_executable(LamLab src/main.cpp
-        src/LaminaHighlighter.cpp
-        src/LaminaHighlighter.h
-        src/CodeCell.cpp
-        src/CodeCell.h
-        src/TextCell.cpp
-        src/TextCell.h
-        src/LaminaIDE.cpp
-        src/LaminaIDE.h
-)
-target_link_libraries(LamLab
-        Qt::Core
-        Qt::Gui
-        Qt::Widgets
-)
-
-if (WIN32)
-    if (MSVC)
-        target_link_options(LamLab PRIVATE "/SUBSYSTEM:WINDOWS")
-    elseif (MINGW)
-        target_link_options(LamLab PRIVATE "-Wl,-subsystem,windows")
-    endif()
-endif()
-
-if (WIN32 AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-    set(DEBUG_SUFFIX)
-    if (MSVC AND CMAKE_BUILD_TYPE MATCHES "Debug")
-        set(DEBUG_SUFFIX "d")
-    endif ()
-    set(QT_INSTALL_PATH "${CMAKE_PREFIX_PATH}")
-    if (NOT EXISTS "${QT_INSTALL_PATH}/bin")
-        set(QT_INSTALL_PATH "${QT_INSTALL_PATH}/..")
-        if (NOT EXISTS "${QT_INSTALL_PATH}/bin")
-            set(QT_INSTALL_PATH "${QT_INSTALL_PATH}/..")
-        endif ()
-    endif ()
-    if (EXISTS "${QT_INSTALL_PATH}/plugins/platforms/qwindows${DEBUG_SUFFIX}.dll")
-        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-                COMMAND ${CMAKE_COMMAND} -E make_directory
-                "$<TARGET_FILE_DIR:${PROJECT_NAME}>/plugins/platforms/")
-        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-                COMMAND ${CMAKE_COMMAND} -E copy
-                "${QT_INSTALL_PATH}/plugins/platforms/qwindows${DEBUG_SUFFIX}.dll"
-                "$<TARGET_FILE_DIR:${PROJECT_NAME}>/plugins/platforms/")
-    endif ()
-    foreach (QT_LIB Core Gui Widgets)
-        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-                COMMAND ${CMAKE_COMMAND} -E copy
-                "${QT_INSTALL_PATH}/bin/Qt6${QT_LIB}${DEBUG_SUFFIX}.dll"
-                "$<TARGET_FILE_DIR:${PROJECT_NAME}>")
-    endforeach (QT_LIB)
-endif ()
-=======
 # 设置构建类型
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug)
 endif()
 
-# 添加第三方库
-add_subdirectory(third_party/glfw)
-add_subdirectory(third_party/nfd)
+# 设置 vcpkg 工具链文件
+if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+    set(CMAKE_TOOLCHAIN_FILE "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+        CACHE STRING "Vcpkg toolchain file")
+endif()
 
-# 禁用 GLFW 的一些不需要的功能
-set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-
-# ImGui 源文件
-set(IMGUI_SOURCES
-    third_party/imgui/imgui.cpp
-    third_party/imgui/imgui_demo.cpp
-    third_party/imgui/imgui_draw.cpp
-    third_party/imgui/imgui_tables.cpp
-    third_party/imgui/imgui_widgets.cpp
-    third_party/imgui/backends/imgui_impl_glfw.cpp
-    third_party/imgui/backends/imgui_impl_opengl3.cpp
-)
-
-# 创建 ImGui 库
-add_library(imgui STATIC ${IMGUI_SOURCES})
-target_include_directories(imgui PUBLIC 
-    third_party/imgui
-    third_party/imgui/backends
-)
-target_link_libraries(imgui PUBLIC glfw)
-
-# 如果使用 OpenGL，需要链接系统 OpenGL 库
-find_package(OpenGL REQUIRED)
+# 查找 wxWidgets
+find_package(wxWidgets REQUIRED COMPONENTS core base stc aui)
+include(${wxWidgets_USE_FILE})
 
 # IDE 源文件
 set(IDE_SOURCES
     src/main.cpp
     src/LaminaIDE.cpp
-    src/TextEditorWindow.cpp
-    src/ProjectExplorerWindow.cpp
-    src/ConsoleWindow.cpp
-    src/ProcessExecutor.cpp
+    src/LaminaIDE.h
+    src/CodeCell.cpp
+    src/CodeCell.h
+    src/TextCell.cpp
+    src/TextCell.h
+    src/LaminaHighlighter.cpp
+    src/LaminaHighlighter.h
 )
 
 # 创建主执行文件
@@ -126,24 +42,22 @@ add_executable(LaminaIDE ${IDE_SOURCES})
 
 # 设置包含目录
 target_include_directories(LaminaIDE PRIVATE
-    include
-    third_party/imgui
-    third_party/imgui/backends
-    third_party/glfw/include
-    third_party/nfd/src/include
+    ${CMAKE_SOURCE_DIR}/src
+    ${CMAKE_SOURCE_DIR}/third_party
 )
 
-# 链接库
-target_link_libraries(LaminaIDE PRIVATE
-    imgui
-    glfw
-    nfd
-    OpenGL::GL
+# 链接 wxWidgets
+target_link_libraries(LaminaIDE PRIVATE ${wxWidgets_LIBRARIES})
+
+# 添加编译定义
+target_compile_definitions(LaminaIDE PRIVATE
+    WXUSINGDLL
+    _UNICODE
+    UNICODE
 )
 
 # Windows 特定设置
 if(WIN32)
-    target_link_libraries(LaminaIDE PRIVATE opengl32)
     # 设置为控制台应用程序以便调试
     set_target_properties(LaminaIDE PROPERTIES
         WIN32_EXECUTABLE FALSE
@@ -152,11 +66,12 @@ endif()
 
 # 设置输出目录
 set_target_properties(LaminaIDE PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-    RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bin/Debug
-    RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin/Release
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+    RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_BINARY_DIR}/bin/Debug"
+    RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}/bin/Release"
 )
 
-# 复制资源文件
-file(COPY assets DESTINATION ${CMAKE_BINARY_DIR}/bin)
->>>>>>> parent of a84a2c4... 更新CMakeLists.txt，README.md和14多个文件... 重制，使用WxWidgets
+# 安装规则
+install(TARGETS LaminaIDE
+    RUNTIME DESTINATION bin
+)
