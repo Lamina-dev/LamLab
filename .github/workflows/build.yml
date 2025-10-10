@@ -16,21 +16,24 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set up vcpkg
+    - name: Setup vcpkg
       uses: lukka/run-vcpkg@v11
       with:
         vcpkgGitCommitId: '4334d8b4c8916018600212ab4dd4bbdc343065d1'
+        vcpkgDirectory: '${{ github.workspace }}/vcpkg'
 
     - name: Install wxWidgets
       run: |
-        vcpkg install wxwidgets:x64-windows-static
+        ${{ github.workspace }}/vcpkg/vcpkg.exe install wxwidgets:x64-windows-static --triplet x64-windows-static
 
     - name: Configure CMake
       run: |
         cmake -B ${{github.workspace}}/build `
           -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} `
           -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake `
-          -DwxWidgets_USE_STATIC=ON
+          -DVCPKG_TARGET_TRIPLET=x64-windows-static `
+          -DwxWidgets_USE_STATIC=ON `
+          -DwxWidgets_ROOT_DIR=${{github.workspace}}/vcpkg/installed/x64-windows-static
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
