@@ -262,7 +262,7 @@ wxXmlNode* ThemeConfig::FindStyleNode(wxXmlNode* themeNode, const wxString& cate
     return nullptr;
 }
 
-wxColour ThemeConfig::GetColor(const wxString& category, const wxString& element) const
+wxColour ThemeConfig::GetColor(const wxString& category, const wxString& element, const wxString& colorType) const
 {
     wxXmlNode* themeNode = FindThemeNode(m_currentTheme);
     if (!themeNode)
@@ -272,7 +272,7 @@ wxColour ThemeConfig::GetColor(const wxString& category, const wxString& element
     if (!styleNode)
         return *wxBLACK;
 
-    wxString colorStr = GetNodeValueStr(styleNode, "foreground", "#000000");
+    wxString colorStr = GetNodeValueStr(styleNode, colorType, "#000000");
     return ParseColor(colorStr);
 }
 

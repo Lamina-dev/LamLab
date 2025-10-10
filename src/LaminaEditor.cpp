@@ -146,10 +146,10 @@ void LaminaEditor::SetLexerColors()
     // 应用默认样式
     StyleClearAll();
     // 首先设置默认风格
-    StyleSetBackground(wxSTC_STYLE_DEFAULT, theme.GetColor("default", "background"));
-    StyleSetForeground(wxSTC_STYLE_DEFAULT, theme.GetColor("default"));
-    SetWhitespaceBackground(true, theme.GetColor("default", "background"));
-    SetWhitespaceForeground(true, theme.GetColor("default"));
+    StyleSetBackground(wxSTC_STYLE_DEFAULT, theme.GetColor("default", "", "background"));
+    StyleSetForeground(wxSTC_STYLE_DEFAULT, theme.GetColor("default", "", "foreground"));
+    SetWhitespaceBackground(true, theme.GetColor("default", "", "background"));
+    SetWhitespaceForeground(true, theme.GetColor("default", "", "foreground"));
     
     // 设置选择区域的颜色
     SetSelBackground(true, wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHT));
@@ -195,22 +195,22 @@ void LaminaEditor::SetEditorStyles()
     ThemeConfig& theme = ThemeConfig::Get();
     
     // 行号样式
-    StyleSetForeground(wxSTC_STYLE_LINENUMBER, theme.GetColor("linenumber"));
-    StyleSetBackground(wxSTC_STYLE_LINENUMBER, theme.GetColor("linenumber", "background"));
+    StyleSetForeground(wxSTC_STYLE_LINENUMBER, theme.GetColor("linenumber", "", "foreground"));
+    StyleSetBackground(wxSTC_STYLE_LINENUMBER, theme.GetColor("linenumber", "", "background"));
     
     // 折叠标记样式
-    StyleSetForeground(wxSTC_STYLE_INDENTGUIDE, theme.GetColor("linenumber"));
+    StyleSetForeground(wxSTC_STYLE_INDENTGUIDE, theme.GetColor("linenumber", "", "foreground"));
     
     // 当前行高亮
-    SetCaretLineBackground(theme.GetColor("currentLine", "background"));
+    SetCaretLineBackground(theme.GetColor("currentLine", "", "background"));
     
     // 大括号匹配
-    StyleSetForeground(wxSTC_STYLE_BRACELIGHT, theme.GetColor("braceMatch"));
-    StyleSetBackground(wxSTC_STYLE_BRACELIGHT, theme.GetColor("braceMatch", "background"));
+    StyleSetForeground(wxSTC_STYLE_BRACELIGHT, theme.GetColor("braceMatch", "", "foreground"));
+    StyleSetBackground(wxSTC_STYLE_BRACELIGHT, theme.GetColor("braceMatch", "", "background"));
     StyleSetBold(wxSTC_STYLE_BRACELIGHT, theme.IsBold("braceMatch"));
     
-    StyleSetForeground(wxSTC_STYLE_BRACEBAD, theme.GetColor("braceMismatch"));
-    StyleSetBackground(wxSTC_STYLE_BRACEBAD, theme.GetColor("braceMismatch", "background"));
+    StyleSetForeground(wxSTC_STYLE_BRACEBAD, theme.GetColor("braceMismatch", "", "foreground"));
+    StyleSetBackground(wxSTC_STYLE_BRACEBAD, theme.GetColor("braceMismatch", "", "background"));
     StyleSetBold(wxSTC_STYLE_BRACEBAD, theme.IsBold("braceMismatch"));
 }
 

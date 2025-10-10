@@ -15,7 +15,7 @@ public:
     bool LoadTheme(const wxString& themeName = wxEmptyString);
     bool SaveTheme();
     
-    wxColour GetColor(const wxString& category, const wxString& element = wxEmptyString) const;
+    wxColour GetColor(const wxString& category, const wxString& element = wxEmptyString, const wxString& colorType = "foreground") const;
     bool IsBold(const wxString& category, const wxString& element = wxEmptyString) const;
     bool IsItalic(const wxString& category, const wxString& element = wxEmptyString) const;
     
