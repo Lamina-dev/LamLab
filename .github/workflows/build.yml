@@ -28,12 +28,15 @@ jobs:
 
     - name: Configure CMake
       run: |
+        $WXROOT="${{github.workspace}}/vcpkg/installed/x64-windows-static"
         cmake -B ${{github.workspace}}/build `
           -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} `
           -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake `
           -DVCPKG_TARGET_TRIPLET=x64-windows-static `
           -DwxWidgets_USE_STATIC=ON `
-          -DwxWidgets_ROOT_DIR=${{github.workspace}}/vcpkg/installed/x64-windows-static
+          -DwxWidgets_INCLUDE_DIRS="$WXROOT/include" `
+          -DwxWidgets_LIB_DIR="$WXROOT/lib"
+
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
