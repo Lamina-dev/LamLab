@@ -22,21 +22,18 @@ jobs:
         vcpkgGitCommitId: '4334d8b4c8916018600212ab4dd4bbdc343065d1'
         vcpkgDirectory: '${{ github.workspace }}/vcpkg'
 
-    - name: Install wxWidgets
+    - name: Install wxWidgets (dynamic)
       run: |
-        ${{ github.workspace }}/vcpkg/vcpkg.exe install wxwidgets:x64-windows-static --triplet x64-windows-static
+        ${{ github.workspace }}/vcpkg/vcpkg.exe install wxwidgets:x64-windows --triplet x64-windows
 
     - name: Configure CMake
       run: |
-        $WXROOT="${{github.workspace}}/vcpkg/installed/x64-windows-static"
         cmake -B ${{github.workspace}}/build `
           -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} `
           -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake `
-          -DVCPKG_TARGET_TRIPLET=x64-windows-static `
-          -DwxWidgets_USE_STATIC=ON `
-          -DwxWidgets_INCLUDE_DIRS="$WXROOT/include" `
-          -DwxWidgets_LIB_DIR="$WXROOT/lib"
-
+          -DVCPKG_TARGET_TRIPLET=x64-windows `
+          -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDLL `
+          -DwxWidgets_USE_STATIC=OFF
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
